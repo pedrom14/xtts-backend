@@ -1,0 +1,7 @@
+flask
+flask_cors
+torch
+numpy
+librosa
+soundfile
+coqui-tts==0.22.0
