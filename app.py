@@ -9,7 +9,7 @@ CORS(app)
 
 # Caminho do modelo
 MODEL_PATH = "xtts/xtts_v2/"
-tts = TTS(model_path=MODEL_PATH, progress_bar=False, gpu=False)
+tts = TTS(model_path=MODEL_PATH, config_path=f"{MODEL_PATH}/config.json", progress_bar=False, gpu=False)
 
 @app.route("/tts", methods=["POST"])
 def generate_tts():
