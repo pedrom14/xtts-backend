@@ -16,17 +16,20 @@ def generate_tts():
     data = request.json
     text = data.get("text")
     language = data.get("language", "pt")
-    speaker = tts.speakers[0]  # usa o primeiro speaker embutido
+    speaker = tts.speakers[0] if tts.speakers else None
 
     if not text:
         return jsonify({"error": "Texto não fornecido"}), 400
+    if not speaker:
+        return jsonify({"error": "Nenhum speaker disponível"}), 500
 
     # Caminhos temporários
-    wav_path = f"output_{uuid.uuid4().hex}.wav"
-    mp3_path = wav_path.replace(".wav", ".mp3")
+    tmp_id = uuid.uuid4().hex
+    wav_path = f"/tmp/xtts_{tmp_id}.wav"
+    mp3_path = f"/tmp/xtts_{tmp_id}.mp3"
 
     try:
-        # Gera o áudio em .wav
+        # Gera o áudio .wav
         tts.tts_to_file(
             text=text,
             file_path=wav_path,
@@ -36,14 +39,18 @@ def generate_tts():
 
         # Converte para .mp3 com ffmpeg
         os.system(f"ffmpeg -y -i {wav_path} -codec:a libmp3lame -qscale:a 2 {mp3_path}")
-        os.remove(wav_path)  # limpa o WAV
+        os.remove(wav_path)
 
-        # Retorna o MP3
-        return send_file(mp3_path, mimetype="audio/mpeg")
+        # Envia o arquivo .mp3 e limpa
+        response = send_file(mp3_path, mimetype="audio/mpeg")
+        os.remove(mp3_path)
+        return response
 
     except Exception as e:
+        print("Erro ao gerar TTS:", e)
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
+
 
