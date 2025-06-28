@@ -4,4 +4,5 @@ torch
 numpy
 librosa
 soundfile
-coqui-tts==0.22.0
+coqui-tts==0.26.2
+
