@@ -17,7 +17,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Baixa os .pth do Hugging Face
 RUN git lfs install && \
     git clone https://huggingface.co/datasets/pedrom15/pthfiles && \
-    mv pthfiles/*.pth ./xtts/xtts_v2/
+    mkdir -p xtts/xtts_v2 && \
+    mv pthfiles/*.pth xtts/xtts_v2/
+
 
 # Copia restante do código
 COPY . .
