@@ -1,8 +1,8 @@
-flask
-flask_cors
-torch==2.5.1
-numpy
-librosa
-soundfile
-coqui-tts==0.21.0
+flask==3.0.3
+flask_cors==4.0.0
+torch==2.5.0
+numpy==1.24.4
+librosa==0.10.1
+soundfile==0.12.1
+coqui-tts==0.22.1
 
