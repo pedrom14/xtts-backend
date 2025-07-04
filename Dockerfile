@@ -2,31 +2,30 @@ FROM python:3.10-slim
 
 # Dependências do sistema
 RUN apt-get update && apt-get install -y \
-    git-lfs \
     ffmpeg \
     libsndfile1 \
     wget \
+    git-lfs \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-# Copia e instala dependências Python
+# Copiar e instalar dependências
 COPY requirements.txt .
 RUN pip install --no-cache-dir torch==2.5.1
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Baixa os arquivos .pth
-RUN git lfs install && \
-    git clone https://huggingface.co/datasets/pedrom15/pthfiles && \
-    mkdir -p xtts/xtts_v2 && \
-    mv pthfiles/*.pth xtts/xtts_v2/
+# Baixar os arquivos .pth do Hugging Face (json já está no repositório)
+RUN mkdir -p xtts/xtts_v2 && \
+    wget -O xtts/xtts_v2/model.pth https://huggingface.co/datasets/pedrom15/pthfiles/resolve/main/model.pth && \
+    wget -O xtts/xtts_v2/mel_stats.pth https://huggingface.co/datasets/pedrom15/pthfiles/resolve/main/mel_stats.pth && \
+    wget -O xtts/xtts_v2/dvae.pth https://huggingface.co/datasets/pedrom15/pthfiles/resolve/main/dvae.pth && \
+    wget -O xtts/xtts_v2/speakers_xtts.pth https://huggingface.co/datasets/pedrom15/pthfiles/resolve/main/speakers_xtts.pth
 
-# Verifica se os arquivos estão no lugar
-RUN ls -lh xtts/xtts_v2/
-
-# Copia os arquivos restantes do app, incluindo os .json
+# Copiar o restante do app
 COPY . .
 
 EXPOSE 5000
 CMD ["python", "app.py"]
+
 
