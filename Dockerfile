@@ -17,8 +17,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copiar o restante do projeto (inclusive xtts/xtts_v2 com .pth e .json)
 COPY . .
 
-# ⚠️ IMPORTANTE: Git LFS precisa ser inicializado e os arquivos puxados
-RUN git lfs install && git lfs pull
 
 EXPOSE 5000
 
