@@ -8,7 +8,16 @@ app = Flask(__name__)
 CORS(app)
 
 MODEL_PATH = "xtts/xtts_v2"
-tts = TTS(model_path=MODEL_PATH, config_path=f"{MODEL_PATH}/config.json", progress_bar=False, gpu=False)
+CONFIG_PATH = f"{MODEL_PATH}/config.json"
+SPEAKERS_PATH = f"{MODEL_PATH}/speakers_xtts.pth"
+
+tts = TTS(
+    model_path=MODEL_PATH,
+    config_path=CONFIG_PATH,
+    speaker_file_path=SPEAKERS_PATH,  # <-- Garantido que o arquivo correto será usado
+    progress_bar=False,
+    gpu=False
+)
 
 @app.route("/tts", methods=["POST"])
 def tts_endpoint():
@@ -34,6 +43,7 @@ def tts_endpoint():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
+
 
 
 
