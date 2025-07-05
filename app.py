@@ -9,12 +9,10 @@ CORS(app)
 
 MODEL_PATH = "xtts/xtts_v2"
 CONFIG_PATH = f"{MODEL_PATH}/config.json"
-SPEAKERS_PATH = f"{MODEL_PATH}/speakers_xtts.pth"
 
 tts = TTS(
     model_path=MODEL_PATH,
     config_path=CONFIG_PATH,
-    speaker_file_path=SPEAKERS_PATH,  # <-- Garantido que o arquivo correto será usado
     progress_bar=False,
     gpu=False
 )
@@ -30,7 +28,7 @@ def tts_endpoint():
             return jsonify({"error": "Missing 'text'"}), 400
 
         filename = f"/tmp/{uuid.uuid4().hex}.mp3"
-        speaker = tts.speakers[0]  # usa primeiro speaker embutido
+        speaker = tts.speakers[0]  # usa o primeiro speaker disponível
 
         # Geração do TTS
         tts.tts_to_file(text=text, file_path=filename, speaker=speaker, language=language)
@@ -43,6 +41,7 @@ def tts_endpoint():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
+
 
 
 
